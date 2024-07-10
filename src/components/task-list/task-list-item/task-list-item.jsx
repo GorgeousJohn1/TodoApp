@@ -1,7 +1,5 @@
-import { formatDistance, subMinutes } from 'date-fns';
-const datee = formatDistance(subMinutes(new Date(), 3), new Date(), {
-  addSuffix: true,
-});
+import './task-list-item.css';
+
 const TaskListItem = () => {
   return (
     <li className="editing">
@@ -9,7 +7,7 @@ const TaskListItem = () => {
         <input class="toggle" type="checkbox" />
         <label>
           <span class="description">Completed task</span>
-          <span class="created">{datee}</span>
+          <span class="created">1 secs ago</span>
         </label>
         <button class="icon icon-edit"></button>
         <button class="icon icon-destroy"></button>

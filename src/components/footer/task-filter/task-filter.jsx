@@ -1,3 +1,4 @@
+import './task-filter.css';
 const TaskFilter = () => {
   return (
     <ul className="filters">
