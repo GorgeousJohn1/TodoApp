@@ -1,5 +1,5 @@
 import './task-list.css';
-import TaskListItem from './task-list-item/task-list-item';
+import TaskListItem from '../task-list-item/task-list-item';
 const TaskList = () => {
   return (
     <ul className="todo-list">

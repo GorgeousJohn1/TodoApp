@@ -1,5 +1,5 @@
 import './footer.css';
-import TaskFilter from './task-filter/task-filter';
+import TaskFilter from '../task-filter/task-filter';
 const Footer = () => {
   return (
     <footer className="footer">
