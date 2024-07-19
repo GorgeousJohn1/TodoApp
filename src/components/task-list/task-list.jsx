@@ -1,11 +1,27 @@
 import React from 'react';
 import './task-list.css';
 import TaskListItem from '../task-list-item/task-list-item';
-const TaskList = ({ tasks, onDeleted }) => {
+const TaskList = ({
+  tasks,
+  filterState,
+  onDeleted,
+  onToggleCompleted,
+  updateTask,
+}) => {
   const tasksArray = tasks.map((task) => {
     const { id, ...taskProps } = task;
     return (
-      <TaskListItem key={id} {...taskProps} onDeleted={() => onDeleted(id)} />
+      <TaskListItem
+        key={id}
+        id={id}
+        {...taskProps}
+        filterState={filterState}
+        onDeleted={() => onDeleted(id)}
+        onToggleCompleted={() => {
+          onToggleCompleted(id);
+        }}
+        updateTask={updateTask}
+      />
     );
   });
 

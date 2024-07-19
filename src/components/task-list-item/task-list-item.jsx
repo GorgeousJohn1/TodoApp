@@ -3,39 +3,56 @@ import './task-list-item.css';
 
 export default class TaskListItem extends Component {
   state = {
-    completed: false,
+    edited: false,
+    label: this.props.description,
   };
 
-  onToggleClick = () => {
-    this.setState(({ completed }) => {
-      return { completed: !completed };
-    });
+  onEdited = () => {
+    this.setState({ edited: true });
+  };
+  onChangeDescription = (e) => {
+    this.setState({ label: e.target.value });
+  };
+  submitEditing = (e) => {
+    e.preventDefault();
+    this.props.updateTask(this.props.id, this.state.label);
+    this.setState({ edited: false });
   };
 
   render() {
-    const { description, created, onDeleted } = this.props;
-    const { completed } = this.state;
-    let classNames = 'todo-list-item';
-    if (completed) classNames += ' completed';
+    const { description, created, onDeleted, onToggleCompleted, completed } =
+      this.props;
+    let listClassNames = 'todo-list-item';
+    if (completed) {
+      listClassNames += ' completed';
+    }
+    if (this.state.edited) listClassNames += ' editing';
     return (
-      <li className={classNames}>
+      <li className={listClassNames}>
         <div className="view">
           <input
             className="toggle"
             type="checkbox"
-            onClick={this.onToggleClick}
+            onClick={onToggleCompleted}
+            defaultChecked={completed}
           />
           <label>
             <span className="description">{description}</span>
             <span className="created">{created}</span>
           </label>
-          <button className="icon icon-edit"></button>
+          <button className="icon icon-edit" onClick={this.onEdited}></button>
           <button className="icon icon-destroy" onClick={onDeleted}></button>
         </div>
-        <input type="text" className="edit" />
+        <form onSubmit={this.submitEditing}>
+          <input
+            type="text"
+            className="edit"
+            onChange={this.onChangeDescription}
+            value={this.state.label}
+            autoFocus={this.state.edited}
+          />
+        </form>
       </li>
     );
   }
 }
-
-// <li className="todo-list-item EDITING">
