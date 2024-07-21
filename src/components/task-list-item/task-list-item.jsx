@@ -1,7 +1,28 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import formatDistanceToNowStrict from 'date-fns/formatDistanceToNowStrict';
+
 import './task-list-item.css';
 
 export default class TaskListItem extends Component {
+  static defaultProps = {
+    description: 'default task',
+    taskDate: Date.now(),
+    completed: false,
+    onDeleted: () => {},
+    onToggleCompleted: () => {},
+    updateTask: () => {},
+  };
+
+  static propTypes = {
+    description: PropTypes.string,
+    taskDate: PropTypes.number,
+    completed: PropTypes.bool,
+    onDeleted: PropTypes.func,
+    onToggleCompleted: PropTypes.func,
+    updateTask: PropTypes.func,
+  };
+
   state = {
     edited: false,
     label: this.props.description,
@@ -20,7 +41,7 @@ export default class TaskListItem extends Component {
   };
 
   render() {
-    const { description, created, onDeleted, onToggleCompleted, completed } =
+    const { description, taskDate, onDeleted, onToggleCompleted, completed } =
       this.props;
     let listClassNames = 'todo-list-item';
     if (completed) {
@@ -38,7 +59,10 @@ export default class TaskListItem extends Component {
           />
           <label>
             <span className="description">{description}</span>
-            <span className="created">{created}</span>
+            <span className="created">{`created ${formatDistanceToNowStrict(
+              taskDate,
+              { addSuffix: true }
+            )}`}</span>
           </label>
           <button className="icon icon-edit" onClick={this.onEdited}></button>
           <button className="icon icon-destroy" onClick={onDeleted}></button>

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+
 import './app.css';
 import NewTaskForm from '../new-task-form/new-task-form';
 import TaskList from '../task-list/task-list';
@@ -15,7 +16,7 @@ export default class App extends Component {
   createTaskItem(description) {
     return {
       description,
-      created: 'created 1 minute ago',
+      taskDate: Date.now(),
       completed: false,
       id: ++this.maxId,
     };
@@ -85,6 +86,8 @@ export default class App extends Component {
   }
 
   updateTask = (id, text) => {
+    if (!text.trim()) return;
+
     this.setState(({ tasks }) => {
       const idx = tasks.findIndex((task) => task.id === id);
       const updatedItem = { ...tasks[idx], description: text };
