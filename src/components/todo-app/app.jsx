@@ -97,7 +97,7 @@ export default class App extends Component {
       description,
       taskDate: Date.now(),
       completed: false,
-      id: this.maxId + 1,
+      id: ++this.maxId,
     };
   }
 

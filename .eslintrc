@@ -36,6 +36,7 @@
     "linebreak-style": ["error", "windows"],
     "quotes": ["error", "single"],
     "semi": ["error", "always"],
+    "no-plusplus":"off",
     "react/prop-types": 0,
     "react/require-default-props": 0,
     "react/state-in-constructor": 0,
