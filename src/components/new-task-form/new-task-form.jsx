@@ -4,14 +4,6 @@ import PropTypes from 'prop-types';
 import './new-task-form.css';
 
 export default class NewTaskForm extends Component {
-  static defaultProps = {
-    onAddTask: () => {},
-  };
-
-  static propTypes = {
-    onAddTask: PropTypes.func,
-  };
-
   state = {
     description: '',
   };
@@ -24,6 +16,7 @@ export default class NewTaskForm extends Component {
 
   render() {
     const { onAddTask } = this.props;
+    const { description } = this.state;
     return (
       <header className="header">
         <h1>todos</h1>
@@ -32,16 +25,24 @@ export default class NewTaskForm extends Component {
           placeholder="What needs to be done?"
           onKeyDown={(e) => {
             if (e.key === 'Enter') {
-              onAddTask(this.state.description);
+              onAddTask(description);
               this.setState({
                 description: '',
               });
             }
           }}
           onChange={this.onDescriptionChange}
-          value={this.state.description}
+          value={description}
         />
       </header>
     );
   }
 }
+
+NewTaskForm.defaultProps = {
+  onAddTask: () => {},
+};
+
+NewTaskForm.propTypes = {
+  onAddTask: PropTypes.func,
+};

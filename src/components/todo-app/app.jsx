@@ -6,21 +6,25 @@ import TaskList from '../task-list/task-list';
 import Footer from '../footer/footer';
 
 export default class App extends Component {
+  static filterTasks(items, filter) {
+    if (filter === 'all') return items;
+
+    if (filter === 'active') {
+      return items.filter((item) => !item.completed);
+    }
+    if (filter === 'completed') {
+      return items.filter((item) => item.completed);
+    }
+
+    return null;
+  }
+
   maxId = 100;
 
   state = {
     tasks: [],
     filterState: 'all',
   };
-
-  createTaskItem(description) {
-    return {
-      description,
-      taskDate: Date.now(),
-      completed: false,
-      id: ++this.maxId,
-    };
-  }
 
   deleteTask = (id) => {
     this.setState(({ tasks }) => {
@@ -63,27 +67,18 @@ export default class App extends Component {
       filterState: 'all',
     });
   };
+
   onActiveFilter = () => {
     this.setState({
       filterState: 'active',
     });
   };
+
   onCompletedFilter = () => {
     this.setState({
       filterState: 'completed',
     });
   };
-
-  filterTasks(items, filter) {
-    if (filter === 'all') return items;
-
-    if (filter === 'active') {
-      return items.filter((item) => !item.completed);
-    }
-    if (filter === 'completed') {
-      return items.filter((item) => item.completed);
-    }
-  }
 
   updateTask = (id, text) => {
     if (!text.trim()) return;
@@ -97,15 +92,21 @@ export default class App extends Component {
     });
   };
 
-  render() {
-    let completeCount = this.state.tasks.filter(
-      (item) => !item.completed
-    ).length;
+  createTaskItem(description) {
+    return {
+      description,
+      taskDate: Date.now(),
+      completed: false,
+      id: this.maxId + 1,
+    };
+  }
 
-    const visibleTasks = this.filterTasks(
-      this.state.tasks,
-      this.state.filterState
-    );
+  render() {
+    const { tasks, filterState } = this.state;
+
+    const completeCount = tasks.filter((item) => !item.completed).length;
+
+    const visibleTasks = this.filterTasks(tasks, filterState);
 
     return (
       <section className="todoapp">
@@ -113,13 +114,13 @@ export default class App extends Component {
         <section className="main">
           <TaskList
             tasks={visibleTasks}
-            filterState={this.state.filterState}
+            filterState={filterState}
             onDeleted={this.deleteTask}
             onToggleCompleted={this.onToggleCompleted}
             updateTask={this.updateTask}
           />
           <Footer
-            filterState={this.state.filterState}
+            filterState={filterState}
             leftTasks={completeCount}
             clearCompleted={this.clearCompleted}
             onAllFilter={this.onAllFilter}

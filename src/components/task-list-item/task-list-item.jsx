@@ -5,24 +5,6 @@ import formatDistanceToNowStrict from 'date-fns/formatDistanceToNowStrict';
 import './task-list-item.css';
 
 export default class TaskListItem extends Component {
-  static defaultProps = {
-    description: 'default task',
-    taskDate: Date.now(),
-    completed: false,
-    onDeleted: () => {},
-    onToggleCompleted: () => {},
-    updateTask: () => {},
-  };
-
-  static propTypes = {
-    description: PropTypes.string,
-    taskDate: PropTypes.number,
-    completed: PropTypes.bool,
-    onDeleted: PropTypes.func,
-    onToggleCompleted: PropTypes.func,
-    updateTask: PropTypes.func,
-  };
-
   state = {
     edited: false,
     label: this.props.description,
@@ -31,9 +13,11 @@ export default class TaskListItem extends Component {
   onEdited = () => {
     this.setState({ edited: true });
   };
+
   onChangeDescription = (e) => {
     this.setState({ label: e.target.value });
   };
+
   submitEditing = (e) => {
     e.preventDefault();
     this.props.updateTask(this.props.id, this.state.label);
@@ -41,13 +25,13 @@ export default class TaskListItem extends Component {
   };
 
   render() {
-    const { description, taskDate, onDeleted, onToggleCompleted, completed } =
-      this.props;
+    const { description, taskDate, onDeleted, onToggleCompleted, completed } = this.props;
+    const { edited, label } = this.state;
     let listClassNames = 'todo-list-item';
     if (completed) {
       listClassNames += ' completed';
     }
-    if (this.state.edited) listClassNames += ' editing';
+    if (edited) listClassNames += ' editing';
     return (
       <li className={listClassNames}>
         <div className="view">
@@ -56,27 +40,37 @@ export default class TaskListItem extends Component {
             type="checkbox"
             onClick={onToggleCompleted}
             defaultChecked={completed}
+            id="toggle"
           />
-          <label>
+          <label htmlFor="toggle">
             <span className="description">{description}</span>
-            <span className="created">{`created ${formatDistanceToNowStrict(
-              taskDate,
-              { addSuffix: true }
-            )}`}</span>
+            <span className="created">{`created ${formatDistanceToNowStrict(taskDate, { addSuffix: true })}`}</span>
           </label>
-          <button className="icon icon-edit" onClick={this.onEdited}></button>
-          <button className="icon icon-destroy" onClick={onDeleted}></button>
+          <button type="button" aria-label="edit" className="icon icon-edit" onClick={this.onEdited} />
+          <button type="button" aria-label="destroy" className="icon icon-destroy" onClick={onDeleted} />
         </div>
         <form onSubmit={this.submitEditing}>
-          <input
-            type="text"
-            className="edit"
-            onChange={this.onChangeDescription}
-            value={this.state.label}
-            autoFocus={this.state.edited}
-          />
+          <input type="text" className="edit" onChange={this.onChangeDescription} value={label} />
         </form>
       </li>
     );
   }
 }
+
+TaskListItem.defaultProps = {
+  description: 'default task',
+  taskDate: Date.now(),
+  completed: false,
+  onDeleted: () => {},
+  onToggleCompleted: () => {},
+  updateTask: () => {},
+};
+
+TaskListItem.propTypes = {
+  description: PropTypes.string,
+  taskDate: PropTypes.number,
+  completed: PropTypes.bool,
+  onDeleted: PropTypes.func,
+  onToggleCompleted: PropTypes.func,
+  updateTask: PropTypes.func,
+};
