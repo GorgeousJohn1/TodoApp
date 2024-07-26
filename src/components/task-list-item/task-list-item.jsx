@@ -25,7 +25,7 @@ export default class TaskListItem extends Component {
   };
 
   render() {
-    const { description, taskDate, onDeleted, onToggleCompleted, completed } = this.props;
+    const { description, taskDate, onDeleted, onToggleCompleted, completed, id } = this.props;
     const { edited, label } = this.state;
     let listClassNames = 'todo-list-item';
     if (completed) {
@@ -35,14 +35,8 @@ export default class TaskListItem extends Component {
     return (
       <li className={listClassNames}>
         <div className="view">
-          <input
-            className="toggle"
-            type="checkbox"
-            onClick={onToggleCompleted}
-            defaultChecked={completed}
-            id="toggle"
-          />
-          <label htmlFor="toggle">
+          <input className="toggle" type="checkbox" onClick={onToggleCompleted} defaultChecked={completed} id={id} />
+          <label htmlFor={id}>
             <span className="description">{description}</span>
             <span className="created">{`created ${formatDistanceToNowStrict(taskDate, { addSuffix: true })}`}</span>
           </label>
