@@ -4,7 +4,14 @@ import PropTypes from 'prop-types';
 import './footer.css';
 import TaskFilter from '../task-filter/task-filter';
 
-function Footer({ filterState, leftTasks, clearCompleted, onAllFilter, onActiveFilter, onCompletedFilter }) {
+function Footer({
+  filterState = 'all',
+  leftTasks = 0,
+  clearCompleted = () => {},
+  onAllFilter = () => {},
+  onActiveFilter = () => {},
+  onCompletedFilter = () => {},
+}) {
   return (
     <footer className="footer">
       <span className="todo-count">{leftTasks === 1 ? `${leftTasks} item left` : `${leftTasks} items left`}</span>
@@ -20,15 +27,6 @@ function Footer({ filterState, leftTasks, clearCompleted, onAllFilter, onActiveF
     </footer>
   );
 }
-
-Footer.defaultProps = {
-  filterState: 'all',
-  leftTasks: 0,
-  clearCompleted: () => {},
-  onAllFilter: () => {},
-  onActiveFilter: () => {},
-  onCompletedFilter: () => {},
-};
 
 Footer.propTypes = {
   filterState: PropTypes.string,

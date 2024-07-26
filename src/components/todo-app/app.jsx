@@ -106,7 +106,7 @@ export default class App extends Component {
 
     const completeCount = tasks.filter((item) => !item.completed).length;
 
-    const visibleTasks = this.filterTasks(tasks, filterState);
+    const visibleTasks = App.filterTasks(tasks, filterState);
 
     return (
       <section className="todoapp">

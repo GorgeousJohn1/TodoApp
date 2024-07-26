@@ -37,6 +37,7 @@
     "quotes": ["error", "single"],
     "semi": ["error", "always"],
     "react/prop-types": 0,
+    "react/require-default-props": 0,
     "react/state-in-constructor": 0,
     "react/destructuring-assignment": [ 2, "always", { "ignoreClassFields": true, "destructureInSignature": "always" }],
     "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
