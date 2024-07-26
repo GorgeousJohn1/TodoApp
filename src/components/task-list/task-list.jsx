@@ -1,5 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import PropTypes, { bool } from 'prop-types';
 
 import './task-list.css';
 import TaskListItem from '../task-list-item/task-list-item';
@@ -27,7 +27,14 @@ function TaskList({ tasks = {}, onDeleted = () => {}, onToggleCompleted = () => 
 }
 
 TaskList.propTypes = {
-  tasks: PropTypes.arrayOf(PropTypes.objectOf(PropTypes.object)),
+  tasks: PropTypes.arrayOf(
+    PropTypes.shape({
+      description: PropTypes.string,
+      taskDate: PropTypes.number,
+      completed: bool,
+      id: PropTypes.number,
+    })
+  ),
   onDeleted: PropTypes.func,
   onToggleCompleted: PropTypes.func,
   updateTask: PropTypes.func,
