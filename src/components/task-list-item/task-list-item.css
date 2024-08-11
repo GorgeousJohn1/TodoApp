@@ -81,12 +81,21 @@
   padding: 15px 85px 15px 60px;
 }
 
-.todo-list-item label .created {
+.todo-list li .view {
+  position: relative;
+}
+
+.todo-list-item label .description {
   font-size: 13px;
   color: gray;
 }
 
-.todo-list-item label .description {
+.description {
+  display: flex;
+  gap: 10px;
+}
+
+.todo-list-item label .title {
   word-break: break-all;
   display: block;
   line-height: 1.2;
@@ -95,20 +104,17 @@
   color: #4d4d4d;
 }
 
-.todo-list-item.completed label .description {
+.todo-list-item.completed label .title {
   color: #cdcdcd;
   text-decoration: line-through;
 }
 
 .todo-list-item .icon {
-  position: absolute;
-  top: 0;
-  bottom: -3px;
   width: 30px;
   height: 40px;
   font-size: 34px;
   color: #cc9a9a;
-  margin: auto 0 11px;
+  margin: auto 0;
   transition: color 0.2s ease-out;
   cursor: pointer;
 }
@@ -118,6 +124,9 @@
 }
 
 .todo-list-item .icon-destroy {
+  position: absolute;
+  top: 0;
+  bottom: -3px;
   right: 10px;
 }
 
@@ -126,12 +135,34 @@
 }
 
 .todo-list-item .icon-edit {
+  position: absolute;
+  top: 0;
+  bottom: -3px;
   font-size: 19px;
   right: 45px;
 }
 
 .todo-list-item .icon-edit:after {
   content: '✎';
+}
+
+.todo-list li .icon-pause,
+.todo-list li .icon-play {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+}
+
+.todo-list li .icon-play {
+  font-size: 15px;
+}
+
+.icon-pause:after {
+  content: '⏸';
+}
+
+.icon-play:after {
+  content: '▶';
 }
 
 .todo-list-item .edit {

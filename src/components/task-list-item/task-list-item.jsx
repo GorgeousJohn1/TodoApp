@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import formatDistanceToNowStrict from 'date-fns/formatDistanceToNowStrict';
 
+import Timer from '../timer/Timer';
+
 import './task-list-item.css';
 
 export default class TaskListItem extends Component {
@@ -35,10 +37,11 @@ export default class TaskListItem extends Component {
     return (
       <li className={listClassNames}>
         <div className="view">
-          <input className="toggle" type="checkbox" onClick={onToggleCompleted} defaultChecked={completed} id={id} />
-          <label htmlFor={id}>
-            <span className="description">{description}</span>
-            <span className="created">{`created ${formatDistanceToNowStrict(taskDate, { addSuffix: true })}`}</span>
+          <input className="toggle" type="checkbox" onChange={onToggleCompleted} defaultChecked={completed} id={id} />
+          <label>
+            <span className="title">{description}</span>
+            <Timer />
+            <span className="description">{`created ${formatDistanceToNowStrict(taskDate, { addSuffix: true })}`}</span>
           </label>
           <button type="button" aria-label="edit" className="icon icon-edit" onClick={this.onEdited} />
           <button type="button" aria-label="destroy" className="icon icon-destroy" onClick={onDeleted} />

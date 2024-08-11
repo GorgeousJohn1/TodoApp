@@ -20,20 +20,24 @@ export default class NewTaskForm extends Component {
     return (
       <header className="header">
         <h1>todos</h1>
-        <input
-          className="new-todo"
-          placeholder="What needs to be done?"
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') {
-              onAddTask(description);
-              this.setState({
-                description: '',
-              });
-            }
-          }}
-          onChange={this.onDescriptionChange}
-          value={description}
-        />
+        <form className="new-todo-form">
+          <input
+            className="new-todo"
+            placeholder="Task"
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                onAddTask(description);
+                this.setState({
+                  description: '',
+                });
+              }
+            }}
+            onChange={this.onDescriptionChange}
+            value={description}
+          />
+          <input type="text" className="new-todo-form__timer" placeholder="Min" />
+          <input type="text" className="new-todo-form__timer" placeholder="Sec" />
+        </form>
       </header>
     );
   }
