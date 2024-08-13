@@ -148,6 +148,7 @@
 
 .todo-list li .icon-pause,
 .todo-list li .icon-play {
+  position: relative;
   font-size: 18px;
   width: 18px;
   height: 18px;
@@ -159,6 +160,9 @@
 
 .icon-pause:after {
   content: '⏸';
+  position: absolute;
+  top: -4px;
+  left: 0;
 }
 
 .icon-play:after {

@@ -6,6 +6,20 @@ import './new-task-form.css';
 export default class NewTaskForm extends Component {
   state = {
     description: '',
+    minutes: '',
+    seconds: '',
+  };
+
+  validateNum = (str, time) => {
+    const { minutes, seconds } = this.state;
+
+    const min = time === 'minutes' ? +str : minutes;
+    const sec = time === 'seconds' ? +str : seconds;
+    const isNotNum = Number.isNaN(+str[str.length - 1]);
+    const isEmpty = str === '';
+    const isHour = min * 60 + sec <= 3600;
+    const isUnderSixty = +str <= 60;
+    return isEmpty || (!isNotNum && isUnderSixty && isHour);
   };
 
   onDescriptionChange = (e) => {
@@ -14,29 +28,58 @@ export default class NewTaskForm extends Component {
     });
   };
 
-  render() {
+  onMinutesChange = (e) => {
+    if (this.validateNum(e.target.value, 'minutes')) {
+      this.setState({
+        minutes: e.target.value.trim(),
+      });
+    }
+  };
+
+  onSecondsChange = (e) => {
+    if (this.validateNum(e.target.value, 'seconds')) {
+      this.setState({
+        seconds: e.target.value.trim(),
+      });
+    }
+  };
+
+  handleSubmit = (e) => {
+    e.preventDefault();
     const { onAddTask } = this.props;
-    const { description } = this.state;
+    const { description, minutes, seconds } = this.state;
+    const timerStamp = (+minutes * 60 + +seconds) * 1000;
+
+    onAddTask(description, timerStamp);
+    this.setState({
+      description: '',
+      minutes: '',
+      seconds: '',
+    });
+  };
+
+  render() {
+    const { description, minutes, seconds } = this.state;
     return (
       <header className="header">
         <h1>todos</h1>
-        <form className="new-todo-form">
+        <form className="new-todo-form" onSubmit={this.handleSubmit}>
+          <input className="new-todo" placeholder="Task" onChange={this.onDescriptionChange} value={description} />
           <input
-            className="new-todo"
-            placeholder="Task"
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                onAddTask(description);
-                this.setState({
-                  description: '',
-                });
-              }
-            }}
-            onChange={this.onDescriptionChange}
-            value={description}
+            type="text"
+            className="new-todo-form__timer"
+            placeholder="Min"
+            onChange={this.onMinutesChange}
+            value={minutes}
           />
-          <input type="text" className="new-todo-form__timer" placeholder="Min" />
-          <input type="text" className="new-todo-form__timer" placeholder="Sec" />
+          <input
+            type="text"
+            className="new-todo-form__timer"
+            placeholder="Sec"
+            onChange={this.onSecondsChange}
+            value={seconds}
+          />
+          <button type="submit" aria-label="Submit" />
         </form>
       </header>
     );

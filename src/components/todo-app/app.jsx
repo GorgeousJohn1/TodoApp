@@ -6,18 +6,20 @@ import TaskList from '../task-list/task-list';
 import Footer from '../footer/footer';
 
 export default class App extends Component {
-  static filterTasks(items, filter) {
-    if (filter === 'all') return items;
+  // static filterTasks(items, filter) {
+  //   if (filter === 'all') {
+  //     return items;
+  //   }
 
-    if (filter === 'active') {
-      return items.filter((item) => !item.completed);
-    }
-    if (filter === 'completed') {
-      return items.filter((item) => item.completed);
-    }
+  //   if (filter === 'active') {
+  //     return items.filter((item) => !item.completed);
+  //   }
+  //   if (filter === 'completed') {
+  //     return items.filter((item) => item.completed);
+  //   }
 
-    return null;
-  }
+  //   return null;
+  // }
 
   maxId = 100;
 
@@ -35,10 +37,10 @@ export default class App extends Component {
     });
   };
 
-  addTask = (taskText) => {
+  addTask = (taskText, timerStamp) => {
     if (!taskText) return;
     this.setState(({ tasks }) => {
-      const newTask = this.createTaskItem(taskText);
+      const newTask = this.createTaskItem(taskText, timerStamp);
       return {
         tasks: [...tasks, newTask],
       };
@@ -48,7 +50,7 @@ export default class App extends Component {
   onToggleCompleted = (id) => {
     this.setState(({ tasks }) => {
       const idx = tasks.findIndex((task) => task.id === id);
-      const toggledItem = { ...tasks[idx], completed: !tasks[idx].completed };
+      const toggledItem = { ...tasks[idx], completed: !tasks[idx].completed, timerStamp: 0 };
       return {
         tasks: [...tasks.slice(0, idx), toggledItem, ...tasks.slice(idx + 1)],
       };
@@ -80,24 +82,25 @@ export default class App extends Component {
     });
   };
 
-  updateTask = (id, text) => {
+  updateTask = (id, text, time) => {
     if (!text.trim()) return;
 
     this.setState(({ tasks }) => {
       const idx = tasks.findIndex((task) => task.id === id);
-      const updatedItem = { ...tasks[idx], description: text };
+      const updatedItem = { ...tasks[idx], description: text, timerStamp: time };
       return {
         tasks: [...tasks.slice(0, idx), updatedItem, ...tasks.slice(idx + 1)],
       };
     });
   };
 
-  createTaskItem(description) {
+  createTaskItem(description, timerStamp) {
     return {
       description,
       taskDate: Date.now(),
       completed: false,
       id: ++this.maxId,
+      timerStamp,
     };
   }
 
@@ -106,14 +109,14 @@ export default class App extends Component {
 
     const completeCount = tasks.filter((item) => !item.completed).length;
 
-    const visibleTasks = App.filterTasks(tasks, filterState);
+    // const visibleTasks = App.filterTasks(tasks, filterState);
 
     return (
       <section className="todoapp">
         <NewTaskForm onAddTask={this.addTask} />
         <section className="main">
           <TaskList
-            tasks={visibleTasks}
+            tasks={tasks}
             filterState={filterState}
             onDeleted={this.deleteTask}
             onToggleCompleted={this.onToggleCompleted}

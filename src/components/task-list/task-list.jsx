@@ -4,9 +4,16 @@ import PropTypes, { bool } from 'prop-types';
 import './task-list.css';
 import TaskListItem from '../task-list-item/task-list-item';
 
-function TaskList({ tasks = {}, onDeleted = () => {}, onToggleCompleted = () => {}, updateTask = () => {} }) {
+function TaskList({
+  tasks = {},
+  onDeleted = () => {},
+  onToggleCompleted = () => {},
+  updateTask = () => {},
+  filterState = '',
+}) {
   const tasksArray = tasks.map((task) => {
-    const { description, taskDate, completed, id } = task;
+    const { description, taskDate, completed, id, timerStamp } = task;
+
     return (
       <TaskListItem
         key={id}
@@ -14,11 +21,13 @@ function TaskList({ tasks = {}, onDeleted = () => {}, onToggleCompleted = () => 
         description={description}
         taskDate={taskDate}
         completed={completed}
+        timerStamp={timerStamp}
         onDeleted={() => onDeleted(id)}
         onToggleCompleted={() => {
           onToggleCompleted(id);
         }}
         updateTask={updateTask}
+        filterState={filterState}
       />
     );
   });
