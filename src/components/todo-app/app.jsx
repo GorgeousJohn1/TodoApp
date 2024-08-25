@@ -1,137 +1,100 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 
 import './app.css';
 import NewTaskForm from '../new-task-form/new-task-form';
 import TaskList from '../task-list/task-list';
 import Footer from '../footer/footer';
 
-export default class App extends Component {
-  // static filterTasks(items, filter) {
-  //   if (filter === 'all') {
-  //     return items;
-  //   }
+export default function App() {
+  const [tasks, setTasks] = useState([]);
+  const [filterState, setFilterState] = useState('all');
+  const [ID, setID] = useState(1);
 
-  //   if (filter === 'active') {
-  //     return items.filter((item) => !item.completed);
-  //   }
-  //   if (filter === 'completed') {
-  //     return items.filter((item) => item.completed);
-  //   }
-
-  //   return null;
-  // }
-
-  maxId = 100;
-
-  state = {
-    tasks: [],
-    filterState: 'all',
-  };
-
-  deleteTask = (id) => {
-    this.setState(({ tasks }) => {
-      const idx = tasks.findIndex((task) => task.id === id);
-      return {
-        tasks: [...tasks.slice(0, idx), ...tasks.slice(idx + 1)],
-      };
-    });
-  };
-
-  addTask = (taskText, timerStamp) => {
-    if (!taskText) return;
-    this.setState(({ tasks }) => {
-      const newTask = this.createTaskItem(taskText, timerStamp);
-      return {
-        tasks: [...tasks, newTask],
-      };
-    });
-  };
-
-  onToggleCompleted = (id) => {
-    this.setState(({ tasks }) => {
-      const idx = tasks.findIndex((task) => task.id === id);
-      const toggledItem = { ...tasks[idx], completed: !tasks[idx].completed, timerStamp: 0 };
-      return {
-        tasks: [...tasks.slice(0, idx), toggledItem, ...tasks.slice(idx + 1)],
-      };
-    });
-  };
-
-  clearCompleted = () => {
-    this.setState(({ tasks }) => {
-      const unCompletedTasks = tasks.filter((item) => !item.completed);
-      return { tasks: unCompletedTasks };
-    });
-  };
-
-  onAllFilter = () => {
-    this.setState({
-      filterState: 'all',
-    });
-  };
-
-  onActiveFilter = () => {
-    this.setState({
-      filterState: 'active',
-    });
-  };
-
-  onCompletedFilter = () => {
-    this.setState({
-      filterState: 'completed',
-    });
-  };
-
-  updateTask = (id, text, time) => {
-    if (!text.trim()) return;
-
-    this.setState(({ tasks }) => {
-      const idx = tasks.findIndex((task) => task.id === id);
-      const updatedItem = { ...tasks[idx], description: text, timerStamp: time };
-      return {
-        tasks: [...tasks.slice(0, idx), updatedItem, ...tasks.slice(idx + 1)],
-      };
-    });
-  };
-
-  createTaskItem(description, timerStamp) {
+  function createTaskItem(description, initialTimer) {
+    setID((prevID) => prevID + 1);
     return {
       description,
       taskDate: Date.now(),
       completed: false,
-      id: ++this.maxId,
-      timerStamp,
+      id: ID,
+      initialTimer,
     };
   }
 
-  render() {
-    const { tasks, filterState } = this.state;
+  const deleteTask = (id) => {
+    setTasks((prevTasks) => {
+      const idx = prevTasks.findIndex((task) => task.id === id);
+      return [...prevTasks.slice(0, idx), ...prevTasks.slice(idx + 1)];
+    });
+  };
 
-    const completeCount = tasks.filter((item) => !item.completed).length;
+  const addTask = (taskText, initialTimer) => {
+    if (!taskText) return;
+    setTasks((prevTasks) => {
+      const newTask = createTaskItem(taskText, initialTimer);
+      return [...prevTasks, newTask];
+    });
+  };
 
-    // const visibleTasks = App.filterTasks(tasks, filterState);
+  const onToggleCompleted = (id) => {
+    setTasks((prevTasks) => {
+      const idx = tasks.findIndex((task) => task.id === id);
+      const toggledItem = { ...prevTasks[idx], completed: !prevTasks[idx].completed, initialTimer: 0 };
+      return [...prevTasks.slice(0, idx), toggledItem, ...prevTasks.slice(idx + 1)];
+    });
+  };
 
-    return (
-      <section className="todoapp">
-        <NewTaskForm onAddTask={this.addTask} />
-        <section className="main">
-          <TaskList
-            tasks={tasks}
-            filterState={filterState}
-            onDeleted={this.deleteTask}
-            onToggleCompleted={this.onToggleCompleted}
-            updateTask={this.updateTask}
-          />
-          <Footer
-            filterState={filterState}
-            leftTasks={completeCount}
-            clearCompleted={this.clearCompleted}
-            onAllFilter={this.onAllFilter}
-            onActiveFilter={this.onActiveFilter}
-            onCompletedFilter={this.onCompletedFilter}
-          />
-        </section>
+  const clearCompleted = () => {
+    setTasks((prevTasks) => {
+      const unCompletedTasks = prevTasks.filter((item) => !item.completed);
+      return unCompletedTasks;
+    });
+  };
+
+  const onAllFilter = () => {
+    setFilterState('all');
+  };
+
+  const onActiveFilter = () => {
+    setFilterState('active');
+  };
+
+  const onCompletedFilter = () => {
+    setFilterState('completed');
+  };
+
+  const updateTaskDescription = (id, text) => {
+    if (!text.trim()) return;
+
+    setTasks((prevTasks) => {
+      const idx = tasks.findIndex((task) => task.id === id);
+      const updatedItem = { ...prevTasks[idx], description: text };
+      return [...prevTasks.slice(0, idx), updatedItem, ...prevTasks.slice(idx + 1)];
+    });
+  };
+
+  const completeCount = tasks.filter((item) => !item.completed).length;
+
+  return (
+    <section className="todoapp">
+      <NewTaskForm onAddTask={addTask} />
+      <section className="main">
+        <TaskList
+          tasks={tasks}
+          filterState={filterState}
+          onDeleted={deleteTask}
+          onToggleCompleted={onToggleCompleted}
+          updateTaskDescription={updateTaskDescription}
+        />
+        <Footer
+          filterState={filterState}
+          leftTasks={completeCount}
+          clearCompleted={clearCompleted}
+          onAllFilter={onAllFilter}
+          onActiveFilter={onActiveFilter}
+          onCompletedFilter={onCompletedFilter}
+        />
       </section>
-    );
-  }
+    </section>
+  );
 }

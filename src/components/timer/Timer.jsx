@@ -1,49 +1,54 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 import { format } from 'date-fns';
 
-export default class Timer extends Component {
-  state = {
-    isPlay: false,
+export default function Timer({ initialTimer = 0, onToggleCompleted = () => {}, id, completed = false }) {
+  const [isPlay, setIsPlay] = useState(false);
+  const [timerStamp, setTimerStamp] = useState(initialTimer);
+
+  const onToggleTimer = () => {
+    setIsPlay((prev) => !prev);
   };
 
-  componentDidMount() {
-    this.interval = setInterval(this.updateTime, 1000);
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.interval);
-  }
-
-  updateTime = () => {
-    const { updateTask, id, description, timerStamp } = this.props;
-    const { isPlay } = this.state;
-    if (!timerStamp) {
-      this.setState({ isPlay: false });
-      return;
+  useEffect(() => {
+    if (completed) {
+      setIsPlay(false);
+      setTimerStamp(0);
     }
-    const newTime = timerStamp - 1000;
-    if (!newTime) this.setState({ isPlay: false });
-    if (isPlay) updateTask(id, description, newTime);
-  };
+  }, [completed]);
 
-  onToggleTimer = () => {
-    const { isPlay } = this.state;
-    this.setState({ isPlay: !isPlay });
-  };
+  useEffect(() => {
+    if (isPlay) {
+      const intervalID = setInterval(() => {
+        setTimerStamp((prev) => Math.max(prev - 1000, 0));
+        if (!timerStamp) {
+          onToggleTimer();
+          onToggleCompleted(id);
+        }
+      }, 1000);
+      return () => {
+        clearInterval(intervalID);
+      };
+    }
+    return () => {};
+  }, [isPlay, timerStamp, id, onToggleCompleted]);
 
-  render() {
-    const { timerStamp } = this.props;
-    const { isPlay } = this.state;
-    return (
-      <span className="description">
-        {isPlay ? (
-          <button type="button" onClick={this.onToggleTimer} aria-label="pause-button" className="icon icon-pause" />
-        ) : (
-          <button type="button" onClick={this.onToggleTimer} aria-label="play-button" className="icon icon-play" />
-        )}
+  return (
+    <span className="description">
+      {isPlay ? (
+        <button type="button" onClick={onToggleTimer} aria-label="pause-button" className="icon icon-pause" />
+      ) : (
+        <button type="button" onClick={onToggleTimer} aria-label="play-button" className="icon icon-play" />
+      )}
 
-        {format(timerStamp, 'mm:ss')}
-      </span>
-    );
-  }
+      {format(timerStamp, 'mm:ss')}
+    </span>
+  );
 }
+
+Timer.propTypes = {
+  initialTimer: PropTypes.number,
+  onToggleCompleted: PropTypes.func,
+  id: PropTypes.number.isRequired,
+  completed: PropTypes.bool,
+};

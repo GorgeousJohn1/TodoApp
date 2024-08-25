@@ -8,11 +8,11 @@ function TaskList({
   tasks = {},
   onDeleted = () => {},
   onToggleCompleted = () => {},
-  updateTask = () => {},
+  updateTaskDescription = () => {},
   filterState = '',
 }) {
   const tasksArray = tasks.map((task) => {
-    const { description, taskDate, completed, id, timerStamp } = task;
+    const { description, taskDate, completed, id, initialTimer } = task;
 
     return (
       <TaskListItem
@@ -21,12 +21,12 @@ function TaskList({
         description={description}
         taskDate={taskDate}
         completed={completed}
-        timerStamp={timerStamp}
+        initialTimer={initialTimer}
         onDeleted={() => onDeleted(id)}
         onToggleCompleted={() => {
           onToggleCompleted(id);
         }}
-        updateTask={updateTask}
+        updateTaskDescription={updateTaskDescription}
         filterState={filterState}
       />
     );
@@ -46,7 +46,7 @@ TaskList.propTypes = {
   ),
   onDeleted: PropTypes.func,
   onToggleCompleted: PropTypes.func,
-  updateTask: PropTypes.func,
+  updateTaskDescription: PropTypes.func,
 };
 
 export default TaskList;
